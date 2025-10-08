@@ -3,69 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Tracking Demo</title>
+    <title>Tracking Technologies Demo (with Google Analytics)</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .log-box { border: 1px solid #ccc; padding: 10px; margin-top: 15px; background-color: #f9f9f9; }
-        .log-box h3 { margin-top: 0; }
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f7f7f7; }
+        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h1 { color: #333; }
+        .tracking-section { margin-top: 30px; padding: 15px; border: 1px dashed #ccc; background-color: #e9e9e9; }
+        .tracking-section h2 { margin-top: 0; color: #007bff; }
+        code { display: block; background-color: #fff; padding: 10px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+        .ga-highlight { border-left: 5px solid #4CAF50; padding-left: 10px; }
     </style>
-</head>
+
+    <div class="ga-highlight" style="margin-bottom: 20px;">
+        <p style="font-weight: bold; color: #4CAF50;">-- GOOGLE ANALYTICS (GA4) SNIPPET --</p>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-TRACKING-ID-DEMO"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          // Replace G-TRACKING-ID-DEMO with your actual GA4 Measurement ID
+          gtag('config', 'G-TRACKING-ID-DEMO'); 
+          
+          // The line below simulates sending a custom event upon page load
+          gtag('event', 'page_view_loaded', { page_path: '/sun-run-demo', page_title: 'Demo Website' });
+        </script>
+        <p style="font-weight: bold; color: #4CAF50;">-- END GOOGLE ANALYTICS SNIPPET --</p>
+    </div>
+    
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        
+        // Replace 1234567890 with your actual Pixel ID
+        fbq('init', '1234567890'); 
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=1234567890&ev=PageView&noscript=1"/>
+    </noscript>
+    </head>
 <body>
 
-    <h1>Website Tracking Technologies Demo</h1>
-    <p>This page uses several common methods to track user activity (locally, in this demo).</p>
+    <div class="container">
+        <h1>Tracking Platform Implementations</h1>
+        <p>This page demonstrates various tracking methods, including the Google Analytics (GA4) Global Site Tag shown in the header.</p>
 
-    <h2>1. Tracking Pixel (Invisible Image)</h2>
-    <p>A 1x1 invisible image file often used to notify a server that the page has loaded. In a real scenario, the server records the user's IP, time, and other data when this image is requested.</p>
-    <img src="https://via.placeholder.com/1x1/0000FF?text=." alt="Tracking Pixel" style="width:1px; height:1px; border:0;">
-    <p>A request for the image above has been sent to the placeholder service. ****</p>
+        <div class="tracking-section">
+            <h2>Google Analytics Campaign URL (UTM)</h2>
+            <p>This is the kind of link you'd click that GA recognizes to track marketing source and medium.</p>
+            <p><strong>Example Link:</strong></p>
+            <code>
+                https://www.yourwebsite.com/landing-page
+                <span style="color: #4CAF50;">?utm_source=spring_email</span>
+                <span style="color: #4CAF50;">&utm_medium=email_blast</span>
+                &utm_campaign=Spring_Sale_2024
+            </code>
+        </div>
+        
+        <div class="tracking-section">
+            <h2>GA4 Event Tracking on Click</h2>
+            <p>This demonstrates how GA's primary function (the <code>gtag('event', ...)</code> call) is attached to a user action.</p>
+            
+            <button id="ga-demo-button" onclick="trackGAEvent()">Log an 'Add to Cart' Event</button>
+            <p id="ga-log-status">GA Event Status: Waiting...</p>
 
-    <hr>
+            <script>
+                function trackGAEvent() {
+                    const status = document.getElementById('ga-log-status');
+                    
+                    // The standard GA4 event tracking call
+                    // This sends a custom 'add_to_cart' event with parameters
+                    // gtag('event', 'add_to_cart', { currency: 'USD', value: 25.99, item_id: 'SHIRT123' });
 
-    <h2>2. HTTP Cookie (via JavaScript)</h2>
-    <p>Cookies are small pieces of data stored on the user's browser. This script creates a simple "user-session-id" cookie.</p>
-    <button onclick="setAndReadCookie()">Set and Read Cookie</button>
-    <p id="cookie-status">Cookie Status: Not Set</p>
+                    console.log("[GA Demo] Firing event: gtag('event', 'add_to_cart', {...})");
+                    
+                    status.innerHTML = `GA Event Status: Sent simulated GA4 event: <code>add_to_cart</code>`;
+                }
+            </script>
+        </div>
+        
+        <div class="tracking-section">
+            <h2>Meta Pixel Custom Event (for comparison)</h2>
+            <p>This uses the Meta/Facebook syntax (<code>fbq</code>) to track a similar event.</p>
+            <button onclick="trackMetaEvent()">Add Item to Cart (Meta)</button>
+            <p id="meta-log-status">Meta Event Status: Waiting...</p>
 
-    <hr>
+            <script>
+                function trackMetaEvent() {
+                    const status = document.getElementById('meta-log-status');
+                    
+                    // The Meta Pixel tracking call (simulated)
+                    // fbq('track', 'AddToCart', { currency: 'USD', value: 150.00 });
 
-    <h2>3. JavaScript Event Listener (Click Tracking)</h2>
-    <p>A script that listens for user actions, such as a button click, and reports the event.</p>
-    <button id="trackable-button">Click to Track</button>
-    <div class="log-box">
-        <h3>Tracking Log:</h3>
-        <p id="event-log">Waiting for a click...</p>
+                    console.log(`[Meta Demo] Firing event: fbq('track', 'AddToCart', {...})`);
+                    
+                    status.innerHTML = `Meta Event Status: Sent simulated Meta event: <code>AddToCart</code>`;
+                }
+            </script>
+        </div>
+
     </div>
-
-    <script>
-        // --- 2. JavaScript Cookie Function ---
-        function setAndReadCookie() {
-            // Set a simple cookie that expires in 1 day
-            document.cookie = "user-session-id=abc123xyz456; expires=" + new Date(Date.now() + 86400000).toUTCString() + "; path=/";
-            
-            // Read the cookie
-            const allCookies = document.cookie;
-            document.getElementById('cookie-status').textContent = "Cookie Status: Successfully Set. All Cookies: " + allCookies;
-        }
-
-        // --- 3. JavaScript Event Listener Function ---
-        document.getElementById('trackable-button').addEventListener('click', function() {
-            const now = new Date().toLocaleTimeString();
-            const logElement = document.getElementById('event-log');
-            
-            // In a real scenario, an AJAX request would send this data to an analytics server.
-            const newLog = `[${now}] Event tracked: Button 'Click to Track' was clicked! 🎯`;
-            logElement.innerHTML = newLog + '<br>' + logElement.innerHTML; // Prepend new log entry
-        });
-
-        // Initial check to see if the cookie already exists
-        window.onload = function() {
-            if (document.cookie.includes('user-session-id')) {
-                document.getElementById('cookie-status').textContent = "Cookie Status: Already Exists from a previous session!";
-            }
-        };
-
-    </script>
-
 </body>
 </html>
