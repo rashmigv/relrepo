@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Tracking Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .log-box { border: 1px solid #ccc; padding: 10px; margin-top: 15px; background-color: #f9f9f9; }
+        .log-box h3 { margin-top: 0; }
+    </style>
+</head>
+<body>
+
+    <h1>Website Tracking Technologies Demo</h1>
+    <p>This page uses several common methods to track user activity (locally, in this demo).</p>
+
+    <h2>1. Tracking Pixel (Invisible Image)</h2>
+    <p>A 1x1 invisible image file often used to notify a server that the page has loaded. In a real scenario, the server records the user's IP, time, and other data when this image is requested.</p>
+    <img src="https://via.placeholder.com/1x1/0000FF?text=." alt="Tracking Pixel" style="width:1px; height:1px; border:0;">
+    <p>A request for the image above has been sent to the placeholder service. ****</p>
+
+    <hr>
+
+    <h2>2. HTTP Cookie (via JavaScript)</h2>
+    <p>Cookies are small pieces of data stored on the user's browser. This script creates a simple "user-session-id" cookie.</p>
+    <button onclick="setAndReadCookie()">Set and Read Cookie</button>
+    <p id="cookie-status">Cookie Status: Not Set</p>
+
+    <hr>
+
+    <h2>3. JavaScript Event Listener (Click Tracking)</h2>
+    <p>A script that listens for user actions, such as a button click, and reports the event.</p>
+    <button id="trackable-button">Click to Track</button>
+    <div class="log-box">
+        <h3>Tracking Log:</h3>
+        <p id="event-log">Waiting for a click...</p>
+    </div>
+
+    <script>
+        // --- 2. JavaScript Cookie Function ---
+        function setAndReadCookie() {
+            // Set a simple cookie that expires in 1 day
+            document.cookie = "user-session-id=abc123xyz456; expires=" + new Date(Date.now() + 86400000).toUTCString() + "; path=/";
+            
+            // Read the cookie
+            const allCookies = document.cookie;
+            document.getElementById('cookie-status').textContent = "Cookie Status: Successfully Set. All Cookies: " + allCookies;
+        }
+
+        // --- 3. JavaScript Event Listener Function ---
+        document.getElementById('trackable-button').addEventListener('click', function() {
+            const now = new Date().toLocaleTimeString();
+            const logElement = document.getElementById('event-log');
+            
+            // In a real scenario, an AJAX request would send this data to an analytics server.
+            const newLog = `[${now}] Event tracked: Button 'Click to Track' was clicked! 🎯`;
+            logElement.innerHTML = newLog + '<br>' + logElement.innerHTML; // Prepend new log entry
+        });
+
+        // Initial check to see if the cookie already exists
+        window.onload = function() {
+            if (document.cookie.includes('user-session-id')) {
+                document.getElementById('cookie-status').textContent = "Cookie Status: Already Exists from a previous session!";
+            }
+        };
+
+    </script>
+
+</body>
+</html>
